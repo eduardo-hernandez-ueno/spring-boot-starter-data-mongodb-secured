@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>py.com.gv.springframework</groupId>
-    <artifactId>spring-data-mongodb-secured-starter</artifactId>
+    <artifactId>spring-boot-starter-data-mongodb-secured</artifactId>
     <version>3.3.1-SNAPSHOT</version>
-    <name>spring-data-mongodb-secured-starter</name>
+    <name>spring-boot-starter-data-mongodb-secured</name>
     <description>spring-data-mongodb-secured-starter</description>
     <url/>
     <licenses>
@@ -45,7 +45,7 @@
         <repository>
             <id>github</id>
             <name>GitHub OWNER Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/ueno-tecnologia-org/spring-data-mongodb-secured-starter</url>
+            <url>https://maven.pkg.github.com/ueno-tecnologia-org/spring-boot-starter-data-mongodb-secured</url>
         </repository>
     </distributionManagement>
 </project>
