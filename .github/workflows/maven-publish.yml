@@ -3,6 +3,11 @@ name: Maven Release
 on:
   release:
     types: [ created ]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "The release version"
+        required: true
 
 jobs:
   build:
@@ -22,7 +27,7 @@ jobs:
 
       - name: Update POM version to release version
         run: |
-          RELEASE_VERSION=${{ github.event.release.tag_name }}
+          RELEASE_VERSION=RELEASE_VERSION=${{ github.event.release.tag_name != '' && github.event.release.tag_name || github.event.inputs.version }}
           mvn versions:set -DnewVersion=${RELEASE_VERSION}
           mvn versions:commit
 
@@ -44,8 +49,6 @@ jobs:
 
       - name: Publish to GitHub Packages Apache Maven
         run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
       - name: Update POM version to next snapshot
         run: |
@@ -56,7 +59,7 @@ jobs:
 
       - name: Commit and push next snapshot version
         run: |
-          git config --global user.name ${{ secrets.USERNAME }}
+          git config --global user.name ${{ github.actor }}
           git config --global user.password ${{ secrets.TOKEN }}
           git config --global user.email 'github-actions@github.com'
           git add pom.xml
