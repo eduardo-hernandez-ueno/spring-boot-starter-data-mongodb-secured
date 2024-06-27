@@ -30,9 +30,9 @@ jobs:
 
       - name: Calculate versions
         run: |
-          RELEASE_VERSION=${{ github.event.release.tag_name != '' && github.event.release.tag_name || github.event.inputs.version }}"
-          echo "RELEASE_VERSION=$RELEASE_VERSION >> $GITHUB_ENV
-          echo "NEXT_VERSION=$(echo $RELEASE_VERSION | awk -F. -v OFS=. '{$NF += 1 ; print}')" >> $GITHUB_ENV
+          RELEASE_VERSION_TAG=${{ github.event.release.tag_name != '' && github.event.release.tag_name || github.event.inputs.version }}"
+          echo "RELEASE_VERSION_TAG=$RELEASE_VERSION_TAG >> $GITHUB_ENV
+          echo "NEXT_VERSION=$(echo $RELEASE_VERSION_TAG | awk -F. -v OFS=. '{$NF += 1 ; print}')" >> $GITHUB_ENV
 
       - name: Release
         uses: qcastel/github-actions-maven-release@master
@@ -45,7 +45,7 @@ jobs:
           release-branch-name: "main"
           # Release
           maven-development-version-number: ${{ env.NEXT_VERSION }}-SNAPSHOT
-          maven-release-version-number: ${{ env.RELEASE_VERSION }}
+          maven-release-version-number: ${{ env.RELEASE_VERSION_TAG }}
           maven-repo-server-id: github
           maven-repo-server-username: ${{ secrets.USERNAME}}
           maven-repo-server-password: ${{ secrets.TOKEN }}
