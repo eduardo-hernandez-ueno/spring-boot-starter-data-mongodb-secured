@@ -13,13 +13,6 @@
     <version>3.3.1-SNAPSHOT</version>
     <name>spring-boot-starter-data-mongodb-secured</name>
     <description>spring-data-mongodb-secured-starter</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
     <scm>
         <connection>scm:git:${project.scm.url}</connection>
         <developerConnection>scm:git:${project.scm.url}</developerConnection>
