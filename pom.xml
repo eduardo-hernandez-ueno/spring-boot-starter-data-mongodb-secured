@@ -16,7 +16,7 @@
         <connection>scm:git:${project.scm.url}</connection>
         <developerConnection>scm:git:${project.scm.url}</developerConnection>
         <url>git@github.com:ueno-tecnologia-org/spring-boot-starter-data-mongodb-secured.git</url>
-        <tag>v3.\3.\${parsedVersion.nextPatchVersion}</tag>
+        <tag>HEAD</tag>
     </scm>
     <properties>
         <java.version>17</java.version>
