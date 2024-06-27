@@ -27,8 +27,8 @@ jobs:
 
       - name: Calculate versions
         run: |
-          RELEASE_VERSION=${{ github.event.release.tag_name != '' && github.event.release.tag_name || github.event.inputs.version }}
-          NEXT_VERSION=$(echo $RELEASE_VERSION | awk -F. -v OFS=. '{$NF += 1 ; print}')
+          echo "RELEASE_VERSION=${{ github.event.release.tag_name != '' && github.event.release.tag_name || github.event.inputs.version }}"
+          echo "NEXT_VERSION=$(echo $RELEASE_VERSION | awk -F. -v OFS=. '{$NF += 1 ; print}')"
 
       - name: Release
         uses: qcastel/github-actions-maven-release@master
