@@ -21,18 +21,31 @@ jobs:
           java-version: '21'
           cache: maven
 
+      - name: Extract release version
+        id: extract-release-version
+        run: |
+          release_version=${GITHUB_REF#refs/tags/}
+          echo "Release version: $release_version"
+          echo "::set-output name=release_version::$release_version"
+
+      - name: Update POM to release version
+        run: |
+          release_version=${{ steps.extract-release-version.outputs.release_version }}
+          mvn versions:set -DnewVersion=$release_version
+          mvn versions:commit
+
       - name: Build with Maven
         run: mvn clean install
+
+      - name: Publish to GitHub Packages
+        run: mvn deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
       - name: Calculate next snapshot version
         id: calculate-version
         run: |
-          # Extract current version from pom.xml
-          current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "Current version: $current_version"
-          
-          # Remove "-SNAPSHOT" if present
-          release_version=${current_version/-SNAPSHOT/}
+          release_version=${{ steps.extract-release-version.outputs.release_version }}
           
           # Increment patch version
           IFS='.' read -r -a version_parts <<< "$release_version"
@@ -65,8 +78,7 @@ jobs:
 
       - name: Restore POM to release version on main
         run: |
-          current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          release_version=${current_version/-SNAPSHOT/}
+          release_version=${{ steps.extract-release-version.outputs.release_version }}
           mvn versions:set -DnewVersion=$release_version
           mvn versions:commit
           git add pom.xml
