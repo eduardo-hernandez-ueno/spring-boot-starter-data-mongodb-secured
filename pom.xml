@@ -45,7 +45,7 @@
         <repository>
             <id>github</id>
             <name>GitHub OWNER Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/ueno-tecnologia-org/spring-boot-starter-data-mongodb-secure</url>
+            <url>https://maven.pkg.github.com/ueno-tecnologia-org/spring-data-mongodb-secured-starter</url>
         </repository>
     </distributionManagement>
 </project>
