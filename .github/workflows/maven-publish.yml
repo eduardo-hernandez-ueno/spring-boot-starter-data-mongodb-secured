@@ -1,8 +1,8 @@
 name: Maven Release
 
 on:
- # release:
-   # types: [ created ]
+  # release:
+  # types: [ created ]
   workflow_dispatch:
     inputs:
       version:
@@ -39,7 +39,7 @@ jobs:
         env:
           JAVA_HOME: /usr/lib/jvm/java-21-openjdk/
         with:
-          release-branch-name: "main"
+          release-branch-name: ${{ env.RELEASE_BRANCH_NAME }}
           git-release-bot-name: "bot-idhub"
           git-release-bot-email: "bot@idhub.io"
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
