@@ -56,12 +56,6 @@ jobs:
           # Set output variable
           echo "::set-output name=next_snapshot_version::$next_snapshot_version"
 
-      - name: Update POM to next snapshot version
-        run: |
-          next_snapshot_version=${{ steps.calculate-version.outputs.next_snapshot_version }}
-          mvn versions:set -DnewVersion=$next_snapshot_version
-          mvn versions:commit
-
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
@@ -71,19 +65,28 @@ jobs:
         run: |
           git remote set-url origin git@github.com:ueno-tecnologia-org/spring-boot-starter-data-mongodb-secured.git
 
-      - name: Checkout main branch
+      - name: Checkout dev branch
         run: |
-          git fetch origin main:main
-          git checkout main
+          git checkout -b dev
+
+      - name: Update POM to next snapshot version
+        run: |
+          next_snapshot_version=${{ steps.calculate-version.outputs.next_snapshot_version }}
+          mvn versions:set -DnewVersion=$next_snapshot_version
+          mvn versions:commit
 
       - name: Commit and push changes to dev
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
-          git checkout -b dev
           git add pom.xml
           git commit -m "Update to version ${{ steps.calculate-version.outputs.next_snapshot_version }}"
           git push origin dev
+
+      - name: Checkout main branch
+        run: |
+          git fetch origin main:main
+          git checkout main
 
       - name: Restore POM to release version on main
         run: |
