@@ -35,6 +35,7 @@ jobs:
           git-release-bot-email: "bot@idhub.io"
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           # Release
+          maven-development-version-number: ${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextPatchVersion}-SNAPSHOT
           maven-release-version-number: ${{ github.event.release.tag_name != '' && github.event.release.tag_name || github.event.inputs.version }}
           maven-repo-server-id: github
           maven-repo-server-username: ${{ secrets.USERNAME}}
