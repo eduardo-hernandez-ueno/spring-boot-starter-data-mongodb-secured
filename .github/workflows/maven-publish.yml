@@ -64,6 +64,6 @@ jobs:
           git config --global user.email ${{ github.actor }}@itti.digital
           git add pom.xml
           git commit -m "Update POM to next snapshot version"
-          echo "${{ secrets.PERSONAL_ACCESS_TOKEN }}" | gh auth login --with-token
+          echo "${{ secrets.TOKEN }}" | gh auth login --with-token
           git remote set-url origin https://github.com/ueno-tecnologia-org/spring-boot-starter-data-mongodb-secured.git
           git push origin HEAD:main
