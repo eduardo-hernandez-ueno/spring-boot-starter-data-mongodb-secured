@@ -1,25 +1,17 @@
 name: Maven Release
+
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "The release version"
-        required: true
-      branch:
-        description: "The branch to release from"
-        required: true
-        default: 'main'
+  release:
+    types: [ created ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
@@ -27,22 +19,33 @@ jobs:
           distribution: 'temurin'
           server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
           settings-path: ${{ github.workspace }} # location for the settings.xml file
-          cache: maven
 
-      - name: Update version in pom.xml
-        run: mvn versions:set -DnewVersion=${{ github.event.inputs.version }}
+      - name: Update POM version to release version
+        run: |
+          RELEASE_VERSION=${{ github.event.release.tag_name }}
+          mvn versions:set -DnewVersion=${RELEASE_VERSION}
+          mvn versions:commit
 
-      - name: Release
-        uses: qcastel/github-actions-maven-release@master
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
+      - name: Publish to GitHub Packages Apache Maven
+        run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
         env:
-          JAVA_HOME: /usr/lib/jvm/java-17-openjdk/
-        with:
-          release-branch-name: "main"
-          git-release-bot-name: "Release Bot"
-          git-release-bot-email: "release-bot@idhub.io"
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          ssh-passphrase: ${ {secrets.SSH_PASSPHRASE }}
+          GITHUB_TOKEN: ${{ github.token }}
 
-          # Release
-          maven-servers: ${{ secrets.MAVEN_SERVERS }}
-          maven-release-args: "-Dskip.unit.tests=true -Dskip.integration.tests=true"
+      - name: Update POM version to next snapshot
+        run: |
+          RELEASE_VERSION=${{ github.event.release.tag_name }}
+          NEXT_VERSION=$(echo $RELEASE_VERSION | awk -F. -v OFS=. '{$NF += 1 ; print}')
+          mvn versions:set -DnewVersion=${NEXT_VERSION}-SNAPSHOT
+          mvn versions:commit
+
+      - name: Commit and push next snapshot version
+        run: |
+          git config --global user.name ${{ secrets.USERNAME }}
+          git config --global user.password ${{ secrets.TOKEN }}
+          git config --global user.email 'github-actions@github.com'
+          git add pom.xml
+          git commit -m "Update POM to next snapshot version"
+          git push origin HEAD:main
