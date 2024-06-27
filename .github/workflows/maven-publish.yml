@@ -25,6 +25,11 @@ jobs:
           server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
           settings-path: ${{ github.workspace }} # location for the settings.xml file
 
+      - name: Calculate versions
+        run: |
+          RELEASE_VERSION=${{ github.event.release.tag_name != '' && github.event.release.tag_name || github.event.inputs.version }}
+          NEXT_VERSION=$(echo $RELEASE_VERSION | awk -F. -v OFS=. '{$NF += 1 ; print}')
+
       - name: Release
         uses: qcastel/github-actions-maven-release@master
         env:
@@ -35,8 +40,8 @@ jobs:
           git-release-bot-email: "bot@idhub.io"
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           # Release
-          maven-development-version-number: ${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextPatchVersion}-SNAPSHOT
-          maven-release-version-number: ${{ github.event.release.tag_name != '' && github.event.release.tag_name || github.event.inputs.version }}
+          maven-development-version-number: ${{ env.NEXT_VERSION }}-SNAPSHOT
+          maven-release-version-number: ${{ env.RELEASE_VERSION }}
           maven-repo-server-id: github
           maven-repo-server-username: ${{ secrets.USERNAME}}
           maven-repo-server-password: ${{ secrets.TOKEN }}
