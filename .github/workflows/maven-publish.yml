@@ -62,18 +62,10 @@ jobs:
           mvn versions:set -DnewVersion=$next_snapshot_version
           mvn versions:commit
 
-      - name: Prepare SSH key
-        id: prepare_ssh
-        run: |
-            echo "-----BEGIN RSA PRIVATE KEY-----" > temp_ssh_key
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" >> temp_ssh_key
-            echo "-----END RSA PRIVATE KEY-----" >> temp_ssh_key
-            echo "::set-output name=ssh_key::$(cat temp_ssh_key)"
-
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ steps.prepare_ssh.outputs.ssh_key }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Commit and push changes to dev
         run: |
