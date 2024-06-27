@@ -16,3 +16,6 @@ jobs:
     steps:
       - name: Set the RELEASE_BRANCH_NAME
         run: echo "RELEASE_BRANCH_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Print env
+        run: echo $GITHUB_ENV
