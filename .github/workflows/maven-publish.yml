@@ -40,6 +40,7 @@ jobs:
           git-release-bot-name: "bot-idhub"
           git-release-bot-email: "bot@idhub.io"
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          release-branch-name: "main"
           # Release
           maven-development-version-number: ${{ env.NEXT_VERSION }}-SNAPSHOT
           maven-release-version-number: ${{ env.RELEASE_VERSION }}
