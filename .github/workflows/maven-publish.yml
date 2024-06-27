@@ -31,39 +31,15 @@ jobs:
           mvn versions:set -DnewVersion=${RELEASE_VERSION}
           mvn versions:commit
 
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-
-
-      - name: Generate settings.xml for Maven
-        run: |
-          echo "<settings>
-                  <servers>
-                    <server>
-                      <id>github</id>
-                      <username>${{ github.actor }}</username>
-                      <password>${{ secrets.TOKEN }}</password>
-                    </server>
-                  </servers>
-                </settings>" > $GITHUB_WORKSPACE/settings.xml
-
-      - name: Publish to GitHub Packages Apache Maven
-        run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
-
-      - name: Update POM version to next snapshot
-        run: |
-          RELEASE_VERSION=${{ github.event.release.tag_name != '' && github.event.release.tag_name || github.event.inputs.version }}
-          NEXT_VERSION=$(echo $RELEASE_VERSION | awk -F. -v OFS=. '{$NF += 1 ; print}')
-          mvn versions:set -DnewVersion=${NEXT_VERSION}-SNAPSHOT
-          mvn versions:commit
-
-      - name: Commit and push next snapshot version
-        run: |
-          git config --global user.name ${{ github.actor }}
-          git config --global user.password ${{ secrets.TOKEN }}
-          git config --global user.email ${{ github.actor }}@itti.digital
-          git add pom.xml
-          git commit -m "Update POM to next snapshot version"
-          echo "${{ secrets.TOKEN }}" | gh auth login --with-token
-          git remote set-url origin https://github.com/ueno-tecnologia-org/spring-boot-starter-data-mongodb-secured.git
-          git push origin HEAD:main
+      - name: Release
+        uses: qcastel/github-actions-maven-release@master
+        with:
+          release-branch-name: "main"
+          git-release-bot-name: "bot-idhub"
+          git-release-bot-email: "bot@idhub.io"
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          # Release
+          maven-repo-server-id: github
+          maven-repo-server-username: ${{ secrets.USERNAME}}
+          maven-repo-server-password: ${{ secrets.TOKEN }}
+          maven-release-args: "-Dskip.unit.tests=true -Dskip.integration.tests=true"
