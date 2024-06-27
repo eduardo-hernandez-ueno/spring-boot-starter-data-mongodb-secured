@@ -9,14 +9,14 @@
     </parent>
     <groupId>py.com.gv.springframework</groupId>
     <artifactId>spring-boot-starter-data-mongodb-secured</artifactId>
-    <version>0.0.9</version>
+    <version>3.3.3-SNAPSHOT</version>
     <name>spring-boot-starter-data-mongodb-secured</name>
     <description>spring-data-mongodb-secured-starter</description>
     <scm>
         <connection>scm:git:${project.scm.url}</connection>
         <developerConnection>scm:git:${project.scm.url}</developerConnection>
         <url>git@github.com:ueno-tecnologia-org/spring-boot-starter-data-mongodb-secured.git</url>
-        <tag>v0.0.9</tag>
+        <tag>HEAD</tag>
     </scm>
     <properties>
         <java.version>17</java.version>
