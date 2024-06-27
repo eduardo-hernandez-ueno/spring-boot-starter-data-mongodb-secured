@@ -31,6 +31,9 @@ jobs:
           echo "RELEASE_VERSION=$RELEASE_VERSION >> $GITHUB_ENV
           echo "NEXT_VERSION=$(echo $RELEASE_VERSION | awk -F. -v OFS=. '{$NF += 1 ; print}')" >> $GITHUB_ENV
 
+      - name: Set the RELEASE_BRANCH_NAME
+        run: echo "RELEASE_BRANCH_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
       - name: Release
         uses: qcastel/github-actions-maven-release@master
         env:
