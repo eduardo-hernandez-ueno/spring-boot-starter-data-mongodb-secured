@@ -72,6 +72,8 @@ jobs:
 
       - name: Restore POM to release version on main
         run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
           release_version=${{ steps.extract-release-version.outputs.release_version }}
           mvn versions:set -DnewVersion=$release_version
           mvn versions:commit
