@@ -91,7 +91,7 @@ jobs:
           mvn versions:commit
           git add pom.xml
           git commit -m "Restore POM to release version $release_version"
-          git push origin main
+          git push origin HEAD
 
       - name: Raise PR for next snapshot version
         uses: peter-evans/create-pull-request@v3
