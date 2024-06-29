@@ -107,11 +107,4 @@ jobs:
           token: ${{ secrets.TOKEN }}
           delete-branch: true
 
-      - name: Merge PR
-        uses: juliangruber/merge-pull-request-action@v1
-        with:
-          github-token: ${{ secrets.TOKEN }}
-          number: ${{ steps.raise-pr-for-next-snapshot-version.outputs.pull-request-number }}
-          method: squash
-
 
