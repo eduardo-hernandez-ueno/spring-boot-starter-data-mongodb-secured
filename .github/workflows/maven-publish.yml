@@ -105,6 +105,6 @@ jobs:
           body: |
             Bumps the version to ${{ steps.calculate-version.outputs.next_snapshot_version }} for the next development iteration.
           token: ${{ secrets.TOKEN }}
-          delete-branch: true
+
 
 
