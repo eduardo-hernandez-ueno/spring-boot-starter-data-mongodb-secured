@@ -96,7 +96,7 @@ jobs:
       - name: Raise PR for next snapshot version
         uses: peter-evans/create-pull-request@v3
         with:
-          branch: snapshot-version-bump
+          branch: snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
           base: develop
           title: "Prepare for next development iteration"
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
