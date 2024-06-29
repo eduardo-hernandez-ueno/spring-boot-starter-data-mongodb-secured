@@ -110,7 +110,7 @@ jobs:
         uses: juliangruber/merge-pull-request-action@v1
         with:
           github-token: ${{ secrets.TOKEN }}
-          pull-request-number: ${{ steps.raise-pr.outputs.pull-request-number }}
+          number: ${{ steps.raise-pr.outputs.pull-request-number }}
           merge-method: squash
 
 
