@@ -111,6 +111,6 @@ jobs:
         with:
           github-token: ${{ secrets.TOKEN }}
           number: ${{ steps.raise-pr.outputs.pull-request-number }}
-          merge-method: squash
+          method: squash
 
 
