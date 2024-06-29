@@ -94,6 +94,7 @@ jobs:
           git push origin HEAD
 
       - name: Raise PR for next snapshot version
+        id: raise-pr-for-next-snapshot-version
         uses: peter-evans/create-pull-request@v3
         with:
           branch: snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
@@ -110,7 +111,7 @@ jobs:
         uses: juliangruber/merge-pull-request-action@v1
         with:
           github-token: ${{ secrets.TOKEN }}
-          number: ${{ steps.raise-pr.outputs.pull-request-number }}
+          number: ${{ steps.raise-pr-for-next-snapshot-version.outputs.pull-request-number }}
           method: squash
 
 
