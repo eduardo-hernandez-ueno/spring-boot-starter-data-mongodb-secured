@@ -9,7 +9,7 @@
     </parent>
     <groupId>py.com.gv.springframework</groupId>
     <artifactId>spring-boot-starter-data-mongodb-secured</artifactId>
-    <version>0.0.40</version>
+    <version>0.0.41</version>
     <name>spring-boot-starter-data-mongodb-secured</name>
     <description>spring-data-mongodb-secured-starter</description>
     <scm>
