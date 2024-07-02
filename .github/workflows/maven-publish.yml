@@ -75,6 +75,7 @@ jobs:
           release_version=${{ steps.extract-release-version.outputs.release_version }}
           mvn versions:set -DnewVersion=$release_version
           mvn versions:commit
+          cat pom.xml
           git add pom.xml
           git commit -m "Restore POM to release version $release_version"
           git push origin main
@@ -90,6 +91,7 @@ jobs:
           mvn versions:set -DnewVersion=${{ steps.calculate-version.outputs.next_snapshot_version }}
           mvn versions:commit
           git add pom.xml
+          
           git commit -m "Prepare for the next development iteration"
           git push origin snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
 
