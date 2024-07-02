@@ -91,7 +91,7 @@ jobs:
           mvn versions:set -DnewVersion=${{ steps.calculate-version.outputs.next_snapshot_version }}
           mvn versions:commit
           git add pom.xml
-          
+          cat pom.xml
           git commit -m "Prepare for the next development iteration"
           git push origin snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
 
