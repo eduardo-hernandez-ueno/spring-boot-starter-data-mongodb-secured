@@ -2,7 +2,6 @@ package py.com.gv.springframework.mongodb;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.mongo.MongoClientSettingsBuilderCustomizer;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,7 +17,6 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 @Configuration
-@EnableConfigurationProperties(MongoDbSecuredContextProperties.class)
 public class MongoDbAutoConfiguration {
 
     public SSLContext sslContext(KeyStore keyStore) throws Exception {
