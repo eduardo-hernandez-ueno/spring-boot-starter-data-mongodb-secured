@@ -87,12 +87,26 @@ jobs:
 
       - name: Create branch for next snapshot version
         run: |
+          echo "Checking out new branch: snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump"
           git checkout -b snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
+          
+          echo "Setting new Maven version: ${{ steps.calculate-version.outputs.next_snapshot_version }}"
           mvn versions:set -DnewVersion=${{ steps.calculate-version.outputs.next_snapshot_version }}
           mvn versions:commit
+          
+          echo "Verifying changes in pom.xml"
+          cat pom.xml
+          
+          echo "Adding changes to git"
           git add pom.xml
+          
+          echo "Committing changes"
           git commit -m "Prepare for the next development iteration"
-          git log
+          
+          echo "Verifying commit"
+          git log -1
+          
+          echo "Pushing changes to new branch"
           git push origin snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
 
       - name: Raise PR for next snapshot version
