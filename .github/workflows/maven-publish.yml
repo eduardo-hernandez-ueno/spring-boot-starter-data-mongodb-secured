@@ -108,6 +108,7 @@ jobs:
           
           echo "Pushing changes to new branch"
           git push origin snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
+          git push origin main
 
       - name: Raise PR for next snapshot version
         id: raise-pr-for-next-snapshot-version
