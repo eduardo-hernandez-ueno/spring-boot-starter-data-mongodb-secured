@@ -109,6 +109,10 @@ jobs:
           echo "Pushing changes to new branch"
           git push origin snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
           git push origin main
+          
+          git checkout snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
+          echo "Verifying commit post push"
+          git show --pretty="" --name-only $(git log --format="%H" -n 1)
 
       - name: Raise PR for next snapshot version
         id: raise-pr-for-next-snapshot-version
