@@ -114,18 +114,5 @@ jobs:
           echo "Verifying commit post push"
           git show --pretty="" --name-only $(git log --format="%H" -n 1)
 
-      - name: Raise PR for next snapshot version
-        id: raise-pr-for-next-snapshot-version
-        uses: peter-evans/create-pull-request@v3
-        with:
-          branch: snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
-          base: main
-          title: "Prepare for next development iteration"
-          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
-          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
-          body: |
-            Bumps the version to ${{ steps.calculate-version.outputs.next_snapshot_version }} for the next development iteration.
-          token: ${{ secrets.TOKEN }}
-
 
 
