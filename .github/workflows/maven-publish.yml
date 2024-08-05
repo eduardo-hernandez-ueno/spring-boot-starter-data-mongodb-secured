@@ -110,6 +110,7 @@ jobs:
           git push origin snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
           git push origin main
           
+          git checkout -b snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
           echo "Verifying commit post push"
           git show --pretty="" --name-only $(git log --format="%H" -n 1)
 
@@ -118,7 +119,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           branch: snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
-          base: develop
+          base: main
           title: "Prepare for next development iteration"
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
