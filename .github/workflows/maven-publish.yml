@@ -104,7 +104,7 @@ jobs:
           git commit -m "Prepare for the next development iteration"
           
           echo "Verifying commit"
-          git log -1
+          git show --pretty="" --name-only $(git log --format="%H" -n 1)
           
           echo "Pushing changes to new branch"
           git push origin snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
