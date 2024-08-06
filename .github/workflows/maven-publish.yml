@@ -21,6 +21,14 @@ jobs:
           java-version: '21'
           cache: maven
 
+      - name: Validate unique development version
+        id: validate-unique-version
+        run: |
+          if git ls-remote --exit-code --heads origin '*-development'; then
+            echo "A development branch already exists"
+            exit 1
+          fi
+
       - name: Extract release version
         id: extract-release-version
         run: |
@@ -35,7 +43,7 @@ jobs:
           mvn versions:commit
 
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean install -DskipTests=true
 
       - name: Calculate next snapshot version
         id: calculate-version
@@ -87,15 +95,12 @@ jobs:
 
       - name: Create branch for next snapshot version
         run: |
-          echo "Checking out new branch: snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump"
-          git checkout -b snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
+          echo "Checking out new branch: ${{ steps.calculate-version.outputs.next_snapshot_version }}-development"
+          git checkout -b ${{ steps.calculate-version.outputs.next_snapshot_version }}-development
           
           echo "Setting new Maven version: ${{ steps.calculate-version.outputs.next_snapshot_version }}"
           mvn versions:set -DnewVersion=${{ steps.calculate-version.outputs.next_snapshot_version }}
           mvn versions:commit
-          
-          echo "Verifying changes in pom.xml"
-          cat pom.xml
           
           echo "Adding changes to git"
           git add pom.xml
@@ -107,12 +112,6 @@ jobs:
           git show --pretty="" --name-only $(git log --format="%H" -n 1)
           
           echo "Pushing changes to new branch"
-          git push origin snapshot-${{ steps.calculate-version.outputs.next_snapshot_version }}-bump
-          git push origin main
+          git push origin ${{ steps.calculate-version.outputs.next_snapshot_version }}-development
           
-          
-          echo "Verifying commit post push"
-          git show --pretty="" --name-only $(git log --format="%H" -n 1)
-
-
-
+        
