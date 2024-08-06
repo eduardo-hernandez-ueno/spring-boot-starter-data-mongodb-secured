@@ -30,12 +30,14 @@ jobs:
           if [ "$current_branch" != "main" ]; then
             echo "Releases can only be created from the main branch"
             gh release delete ${{ github.event.release.tag_name }} -y
+            git push origin --delete ${{ github.event.release.tag_name }}
             git tag -d ${{ github.event.release.tag_name }}
             exit 1
           fi
           if git ls-remote --exit-code --heads origin '*-development'; then
             echo "A development branch already exists"
             gh release delete ${{ github.event.release.tag_name }} -y
+            git push origin --delete ${{ github.event.release.tag_name }}
             git tag -d ${{ github.event.release.tag_name }}
             exit 1
           fi
