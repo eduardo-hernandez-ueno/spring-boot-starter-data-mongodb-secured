@@ -21,10 +21,30 @@ jobs:
           java-version: '21'
           cache: maven
 
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Configure Git to use SSH
+        run: |
+          git remote set-url origin git@github.com:ueno-tecnologia-org/spring-boot-starter-data-mongodb-secured.git
+
+      - name: Checkout main branch
+        run: |
+          git fetch origin main:main
+          git checkout main
+
+      - name: Config Git user
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+
       - name: Validate unique development version
         id: validate-unique-version
         run: |
-          echo ${{ secrets.TOKEN }} | gh auth login --with-token
+          gh auth setup-git
+          gh auth status
         
           current_branch=$(git rev-parse --abbrev-ref HEAD)
           if [ "$current_branch" != "main" ]; then
@@ -71,25 +91,6 @@ jobs:
           
           # Set output variable
           echo "::set-output name=next_snapshot_version::$next_snapshot_version"
-
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Configure Git to use SSH
-        run: |
-          git remote set-url origin git@github.com:ueno-tecnologia-org/spring-boot-starter-data-mongodb-secured.git
-
-      - name: Checkout main branch
-        run: |
-          git fetch origin main:main
-          git checkout main
-
-      - name: Config Git user
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
 
       - name: Restore POM to release version on main
         run: |
