@@ -13,35 +13,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Leer nombre del paquete desde pom.xml
-        id: get-package-name
-        run: |
-          PACKAGE_NAME=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.artifactId}' --non-recursive exec:exec)
-          VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-          echo "PACKAGE_NAME=${PACKAGE_NAME}" >> $GITHUB_ENV
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: maven
 
-      - name: Set up environment
-        run: |
-          PACKAGE_VERSION=${{ env.VERSION }}
-          OWNER=${{ github.repository_owner }}
-          REPO=${{ github.event.repository.name }}
-          
-          echo "PACKAGE_VERSION=${PACKAGE_VERSION}" >> $GITHUB_ENV
-          echo "OWNER=${OWNER}" >> $GITHUB_ENV
-          echo "REPO=${REPO}" >> $GITHUB_ENV
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Delete package version
+      - name: Configure Git to use SSH
+        run: |
+          git remote set-url origin git@github.com:ueno-tecnologia-org/spring-boot-starter-data-mongodb-secured.git
+
+      - name: Checkout main branch
+        run: |
+          git fetch origin main:main
+          git checkout main
+
+      - name: Config Git user
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+
+      - name: Build with Maven
+        run: mvn clean install -DskipTests=true
+
+      - name: Publish to GitHub Packages
+        run: mvn deploy
         env:
-          GH_TOKEN: ${{ secrets.TOKEN }}
-          PACKAGE_NAME: ${{ env.PACKAGE_NAME }}
-        run: |
-          curl -X DELETE \
-            -H "Authorization: token $GH_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/orgs/${OWNER}/packages/container/${PACKAGE_NAME}/versions/${PACKAGE_VERSION}TOKEN: ${{ secrets.TOKEN }}
-
-          - name: Publish to GitHub Packages
-            run: mvn deploy
-            env:
-              GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
