@@ -29,11 +29,6 @@ jobs:
         run: |
           git remote set-url origin git@github.com:ueno-tecnologia-org/spring-boot-starter-data-mongodb-secured.git
 
-      - name: Checkout main branch
-        run: |
-          git fetch origin main:main
-          git checkout main
-
       - name: Config Git user
         run: |
           git config --global user.name 'github-actions'
