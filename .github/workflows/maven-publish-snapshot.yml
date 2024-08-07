@@ -16,8 +16,8 @@ jobs:
       - name: Leer nombre del paquete desde pom.xml
         id: get-package-name
         run: |
-          PACKAGE_NAME=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.artifactId}' --non-recursive)
-          VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive)
+          PACKAGE_NAME=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.artifactId}' --non-recursive exec:exec)
+          VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
           echo "PACKAGE_NAME=${PACKAGE_NAME}" >> $GITHUB_ENV
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
