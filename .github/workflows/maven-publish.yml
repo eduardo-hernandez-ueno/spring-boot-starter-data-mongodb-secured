@@ -1,4 +1,4 @@
-name: Build and Update Snapshot Version
+name: Build and release stable version
 
 on:
   release:
